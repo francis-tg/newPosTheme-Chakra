@@ -1,0 +1,4 @@
+.postionLeftActive{
+    left: 0;
+    transition: left .5s ease;
+}

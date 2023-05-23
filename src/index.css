@@ -1,0 +1,4 @@
+.postion-right-active{
+    right: 0;
+    transition: right .5s ease;
+}

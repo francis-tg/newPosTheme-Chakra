@@ -29,9 +29,9 @@ export const OrderSlice = createSlice({
       ) {
         state.orders.order.push({
           productName: action.payload.nom,
-          product_id: action.payload._id,
+          product_id: action.payload.id,
           price: action.payload.price,
-          secteur: action.payload.secteur._id,
+          secteur: action.payload.secteur.id,
           quantite: 1,
           total: action.payload.price
         });
@@ -116,9 +116,9 @@ export const OrderSlice = createSlice({
         (a) => a.product_id === action.payload
       ); */
       if (action.payload.type === "composition") {
-        state.orders.compositions.splice(action.payload.index, 1);
+        state.orders.compositions.splice(action.payload, 1);
       } else {
-        state.orders.order.splice(action.payload.index, 1);
+        state.orders.order.splice(action.payload, 1);
       }
       state.orders.total = _.sumBy(state.orders.order, "total");
     },
@@ -126,12 +126,12 @@ export const OrderSlice = createSlice({
       const value = action.payload;
       state.orders = {
         ...state.orders,
-        user_id: value.user_id._id,
+        user_id: value.user_id.id,
         table_id: value.table,
         table_name: value.tableName,
         order: value.products,
         total: value.total,
-        commande_id: value._id
+        commande_id: value.id
       };
     },
     setComposition: (state, action) => {

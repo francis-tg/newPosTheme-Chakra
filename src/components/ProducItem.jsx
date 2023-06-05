@@ -1,22 +1,27 @@
 import {Box, Divider, Flex, GridItem, Text} from "@chakra-ui/react";
 import React from "react";
 
-function ProducItem() {
+function ProducItem({produit, onClick}) {
   return (
-    <GridItem bg="green.400" p={5} rounded="md">
-      <Box>
+    <GridItem bg="green.400" p={5} rounded="md" onClick={onClick}>
+      <Box cursor="pointer">
         <Text fontSize={{base: "md", xl: "lg"}} fontWeight="bold">
-          DOPEL MUNICH
+          {produit.nom}
         </Text>
         <Flex mb={2} mt={2}>
-          <Text fontSize={{base: "md", xl: "lg"}}>Prix:</Text>
+          <Text fontSize={{base: "md", xl: "lg"}}>Prix: </Text>
           <Text fontSize={{base: "md", xl: "lg"}} fontWeight="bold">
-            1000 F
+            {produit.price} F
           </Text>
         </Flex>
         <Divider />
         <Flex>
-          <Text>Quantité: 2</Text>
+          <Text>
+            Quantité:{" "}
+            {(!produit["Article.protionnable"] &&
+              produit["Article.quantite"]) ||
+              produit["Article.portions"]}
+          </Text>
         </Flex>
       </Box>
     </GridItem>

@@ -45,7 +45,7 @@ export const OrderSlice = createSlice({
     setTable: (state, action) => {
       state.orders = {
         ...state.orders,
-        table_id: action.payload._id,
+        table_id: action.payload.id,
         table_name: action.payload.nom
       };
     },

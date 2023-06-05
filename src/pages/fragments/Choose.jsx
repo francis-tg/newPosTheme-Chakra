@@ -16,7 +16,9 @@ function Choose() {
         justifyContent="center"
         textColor={textColor}
         alignItems="center"
-        mt={400}
+        mt={300}
+        ml={5}
+        mr={10}
       >
         <Box
           bg="orange.300"

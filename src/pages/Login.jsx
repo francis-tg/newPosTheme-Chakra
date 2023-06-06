@@ -62,12 +62,14 @@ function LoginPage() {
       if (r.ok) setPageLoading(true);
       if (r.status === 401) {
         setPageLoading(false);
-        toast({title: "Erreur", description: await r.text()});
+        setLoadingState(false);
+        toast({title: "Erreur", description: await r.text(), status: "error"});
       }
       if (r.status === 200) {
         setLoadingState(false);
         sessionStorage.setItem("token", await r.json());
-        return navigate("/");
+        navigate("/");
+        return window.location.reload();
       }
     });
   }

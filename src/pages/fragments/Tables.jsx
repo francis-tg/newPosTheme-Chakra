@@ -1,7 +1,7 @@
 import React from "react";
 import LargeGridContainer from "../../components/LargeGridContainer";
 import {Box, Flex, GridItem, Heading} from "@chakra-ui/react";
-import {API_URL, fetchAPI} from "../../api/common";
+import {API_URL} from "../../api/common";
 import {useDispatch} from "react-redux";
 import {setTable} from "../../redux/features/order";
 
@@ -9,9 +9,12 @@ function Tables() {
   const [CommandeTables, setCommandeTable] = React.useState([]);
   const dispatch = useDispatch();
   async function fetchTable() {
-    const data = await fetchAPI("GET", `${API_URL}/common/table`).then(
-      async r => await r.json()
-    );
+    const data = await fetch(`${API_URL}/common/table`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`
+      }
+    }).then(async r => await r.json());
     setCommandeTable(data);
   }
   React.useEffect(() => {

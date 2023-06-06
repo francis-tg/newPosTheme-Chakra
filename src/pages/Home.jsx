@@ -10,12 +10,11 @@ function Home() {
   const type = useSelector(state => state.OrderReduce.type);
   const serveuse = useSelector(state => state.OrderReduce.orders.user_id);
   const table = useSelector(state => state.OrderReduce.orders.table_id);
-
+  let render = "";
   if (type === "edit") {
     return <Main />;
   }
   if (type === "new") {
-    let render = "";
     render = <Serveuses />;
     if (serveuse) {
       render = <Tables />;

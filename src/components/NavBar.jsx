@@ -8,8 +8,9 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import {ColorModeSwitcher} from "../ColorModeSwitcher";
-
+import {useSelector} from "react-redux";
 function NavBar() {
+  const isAuth = useSelector(state => state.UserReduce.isAuth);
   const textColor = useColorModeValue("black", "black");
   return (
     <Flex align="center" p={2} bg="orange.100" textColor={textColor}>
@@ -17,10 +18,13 @@ function NavBar() {
         Place de la victoire
       </Heading>
       <Spacer />
-      <Avatar size="sm" marginEnd={2} />
+      {isAuth ? (<>
+        <Avatar size="sm" marginEnd={2} />
       <Button bg="red.400" size="sm">
         Déconnexion
       </Button>
+      
+      </>) : ""}
       <ColorModeSwitcher />
     </Flex>
   );

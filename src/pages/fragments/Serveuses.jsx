@@ -10,9 +10,12 @@ function Serveuses() {
   const dispatch = useDispatch();
   async function fetchServeuse() {
     try {
-      const data = await fetchAPI("GET", `${API_URL}/common/serveuse`).then(
-        async r => await r.json()
-      );
+      const data = await fetchAPI(
+        "GET",
+        `${API_URL}/common/serveuse`,
+        {},
+        {Authorization: `Bearer ${sessionStorage.getItem("token")}`}
+      ).then(async r => await r.json());
 
       setSeveuse(data);
     } catch (error) {}

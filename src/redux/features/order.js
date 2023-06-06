@@ -24,7 +24,7 @@ export const OrderSlice = createSlice({
   reducers: {
     addOrder: (state, action) => {
       if (
-        state.orders.order.filter(o => o.product_id === action.payload._id)
+        state.orders.order.filter(o => o.product_id === action.payload.id)
           .length === 0
       ) {
         state.orders.order.push({
@@ -51,7 +51,7 @@ export const OrderSlice = createSlice({
     },
     addQuantity: (state, action) => {
       state.orders.order.filter((o, i) => {
-        if (o.product_id === action.payload.product_id) {
+        if (o.product_id === parseInt(action.payload.product_id)) {
           state.orders.order[i].quantite = state.orders.order[i].quantite + 1;
           state.orders.order[i].total =
             state.orders.order[i].price * state.orders.order[i].quantite;

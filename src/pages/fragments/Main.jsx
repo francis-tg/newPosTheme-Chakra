@@ -22,7 +22,7 @@ function Main() {
     setShowPan(!showPan)
   }
   async function fetchProduitsAndCategories() {
-    const { categories, produits } = await fetchAPI("GET", `${API_URL}/common/produit`).then(async (r) => await r.json())
+    const { categories, produits } = await fetchAPI("GET", `${API_URL}/common/produit`,{},{Authorization: `Bearer ${sessionStorage.getItem("token")}`}).then(async (r) => await r.json())
     setCategories(categories)
     setProducts(produits)
   }

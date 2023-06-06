@@ -3,8 +3,8 @@ import CommandeItem from '../../components/CommandeItem';
 import CommandeContainer from '../../components/CommandeContainer';
 import ProductContainer from '../../components/ProductContainer';
 import ProducItem from '../../components/ProducItem';
-import { FaShoppingCart } from 'react-icons/fa';
-import { Box, Button, Grid, GridItem,Icon,Slide,Text} from '@chakra-ui/react';
+import {  FaShoppingCart } from 'react-icons/fa';
+import { Box, Button,  Grid, GridItem,Icon,Slide,Text, useDisclosure} from '@chakra-ui/react';
 import CategoryContainer from "../../components/CategoryContainer";
 import CategoryItem from "../../components/CategoryItem";
 import { API_URL, fetchAPI } from "../../api/common";
@@ -12,11 +12,24 @@ import Panier from "../../components/Panier";
 import { useDispatch } from "react-redux";
 import { addOrder } from "../../redux/features/order";
 import AddComposBtn from "../../components/AddComposBtn";
+import CustomAlertDialog from "../../components/CustomAlertDialog";
+import MultiSelectMenu from "../../components/MultiselectMenu";
 function Main() {
   const [showPan, setShowPan] = useState(false);
   const [Categories, setCategories] = useState([]);
   const [Products, setProducts] = useState([]);
   const [Commandes, setCommandes] = useState([]);
+  const [FilterMenu, setFilterMenu] = useState(Products)
+   const {isOpen, onOpen, onClose} = useDisclosure();
+  function onFilter(id) {
+    if (id === "all") {
+      return setFilterMenu(Products)
+    }
+    else {
+      return setFilterMenu(Products.filter((product) => product.category === id))
+    }
+
+  }
   const dispatch = useDispatch()
     function togglePan() {
     setShowPan(!showPan)
@@ -25,6 +38,7 @@ function Main() {
     const { categories, produits } = await fetchAPI("GET", `${API_URL}/common/produit`,{},{Authorization: `Bearer ${sessionStorage.getItem("token")}`}).then(async (r) => await r.json())
     setCategories(categories)
     setProducts(produits)
+    setFilterMenu(produits)
   }
   React.useEffect(() => {
     fetchProduitsAndCategories()
@@ -54,16 +68,29 @@ function Main() {
             <CommandeItem/>
             </CommandeContainer>
             <CategoryContainer>
+              <CategoryItem name="Tous" onClick={()=>onFilter("all") }/>
               {Categories.map((categorie, i) => (
-                <CategoryItem name={categorie.nom} key={i}/>
+                <CategoryItem name={categorie.nom} key={i} onClick={()=>onFilter(categorie.id) } />
               ))}
               
           </CategoryContainer>
           <Box>
             <Text fontSize="xl" color="gray.500">Products</Text>
               <ProductContainer>
-                <AddComposBtn/>
-                {Products.map((product, i) => (
+                <AddComposBtn onClick={onOpen } />
+                <CustomAlertDialog isOpen={isOpen} onClose={onClose} title="Créer un composition">
+                  {/* <InputGroup>
+                    <Select>
+                      <option value=''>Selection un produit</option>
+                      {Products.map((p, i) => (
+                        <option value={p.id} key={i}>{ p.nom }</option>
+                      ))}
+                    </Select>
+                    <IconButton icon={<FaPlus/>} bg="orange.500"/>
+                  </InputGroup> */}
+                  <MultiSelectMenu label="Selectionner les produit pour la composition" options={Products} onChange={(val)=>console.log(val)}></MultiSelectMenu>
+                </CustomAlertDialog>
+                {FilterMenu.map((product, i) => (
                   <ProducItem produit={product} key={i} onClick={()=>dispatch(addOrder(product)) } />
               ))}
             </ProductContainer>

@@ -1,6 +1,6 @@
 /* eslint-disable no-dupe-keys */
 import {createSlice} from "@reduxjs/toolkit";
-import {API_URL} from "../../api/common";
+import {API_URL, removeObjectsByValue} from "../../api/common";
 import _ from "lodash";
 
 const initialState = {
@@ -9,11 +9,10 @@ const initialState = {
     table_id: "",
     table_name: "",
     order: [],
-    compositions: [],
-    cp_total: 0,
     total: 0,
     commande_id: ""
   },
+  compositions: [],
   type: "",
   loading: false
 };
@@ -28,7 +27,7 @@ export const OrderSlice = createSlice({
           .length === 0
       ) {
         state.orders.order.push({
-          productName: action.payload.nom,
+          produitName: action.payload.nom,
           product_id: action.payload.id,
           price: action.payload.price,
           secteur: action.payload.secteur.id,
@@ -79,6 +78,7 @@ export const OrderSlice = createSlice({
       state.loading = true;
       if (state.type === "new") {
         state.orders.total += state.orders.cp_total;
+        state.orders.order = [...state.orders.order, ...state.compositions];
         fetch(`${API_URL}/common/commande/new`, {
           method: "POST",
           headers: {
@@ -93,6 +93,7 @@ export const OrderSlice = createSlice({
         });
       } else {
         state.orders.total += state.orders.cp_total;
+
         fetch(`${API_URL}/commande/edit/${state.orders.commande_id}`, {
           method: "POST",
           headers: {
@@ -116,9 +117,13 @@ export const OrderSlice = createSlice({
         (a) => a.product_id === action.payload
       ); */
       if (action.payload.type === "composition") {
-        state.orders.compositions.splice(action.payload, 1);
+        state.compositions = removeObjectsByValue(
+          state.compositions,
+          "tag",
+          action.payload.index
+        );
       } else {
-        state.orders.order.splice(action.payload, 1);
+        state.orders.order.splice(action.payload.index, 1);
       }
       state.orders.total = _.sumBy(state.orders.order, "total");
     },
@@ -134,12 +139,9 @@ export const OrderSlice = createSlice({
         commande_id: value.id
       };
     },
-    setComposition: (state, action) => {
-      state.orders.compositions = [
-        ...state.orders.compositions,
-        action.payload
-      ];
-      state.orders.cp_total += _.sumBy(action.payload, "total");
+    addComposition: (state, action) => {
+      state.compositions = [...state.compositions, ...action.payload];
+      state.orders.total += _.sumBy(action.payload, "total");
     }
   }
 });
@@ -154,7 +156,7 @@ export const {
   setType,
   removeArticle,
   editCommande,
-  setComposition
+  addComposition
 } = OrderSlice.actions;
 
 export default OrderSlice.reducer;

@@ -11,13 +11,20 @@ import {
 import React from "react";
 import {FaTimes} from "react-icons/fa";
 import PanierItem from "./PanierItem";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import ComposPanierItem from "./ComposPanierItem";
+import {groupObjectsByValue} from "../api/common";
+import {setCommande} from "../redux/features/order";
 
-function Panier() {
+function Panier({key}) {
   const orders = useSelector(state => state.OrderReduce.orders.order);
+  const orderTotal = useSelector(state => state.OrderReduce.orders.total);
+  const Compositions = useSelector(state => state.OrderReduce.compositions);
   const table_name = useSelector(state => state.OrderReduce.orders.table_name);
+  const groupedCompos = groupObjectsByValue(Compositions, "tag");
+  const dispatch = useDispatch();
   return (
-    <Box color="black">
+    <Box color="black" key={key}>
       <Box>
         <Flex py={2}>
           <Box>
@@ -29,17 +36,40 @@ function Panier() {
             </Heading>
           </Box>
           <Spacer />
+
+          <Heading size="md">
+            {orderTotal} F
+          </Heading>
           <Button>
             <Icon as={FaTimes} />
           </Button>
         </Flex>
         <Divider border="1px" />
       </Box>
-      <Box p={2} overflowX="hidden" overflowY="auto" maxHeight="80vh">
+      <Box
+        p={2}
+        overflowX="hidden"
+        overflowY="auto"
+        maxHeight={{base: "88vh", xl: "85vh"}}
+        height={{base: "88vh", xl: "85vh"}}
+      >
         <Grid gap={2}>
-          {orders.map((order, i) => <PanierItem article={order} index={i} />)}
+          {orders.map((simpleOrder, i) =>
+            <PanierItem article={simpleOrder} index={i} />
+          )}
+          {groupedCompos.map((compos, i) =>
+            <ComposPanierItem article={compos} index={i} />
+          )}
         </Grid>
       </Box>
+      <Button
+        bg="orange"
+        width="100%"
+        _hover={{bg: "green"}}
+        onClick={() => dispatch(setCommande())}
+      >
+        Commander
+      </Button>
     </Box>
   );
 }

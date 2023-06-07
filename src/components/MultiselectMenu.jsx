@@ -80,8 +80,8 @@ const MultiSelectMenu = props => {
                   o => o.id === values[values.length - 1]
                 );
                 prepValue.push({
-                  product_id: optionCp.id,
-                  productName: optionCp.nom,
+                  produit_id: optionCp.id,
+                  produitName: optionCp.nom,
                   price: optionCp.price,
                   secteur: optionCp.secteur,
                   total: optionCp.price,
@@ -91,8 +91,8 @@ const MultiSelectMenu = props => {
                 setCustomValue(prev => [
                   ...prev,
                   {
-                    product_id: optionCp.id,
-                    productName: optionCp.nom,
+                    produit_id: optionCp.id,
+                    produitName: optionCp.nom,
                     price: optionCp.price,
                     secteur: optionCp.secteur,
                     total: optionCp.price,

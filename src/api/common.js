@@ -18,3 +18,22 @@ export function fetchAPI(method, url, data, options) {
     });
   }
 }
+
+export function groupObjectsByValue(objects, key) {
+  const groupedObjects = {};
+
+  for (const object of objects) {
+    const value = object[key];
+    if (groupedObjects[value]) {
+      groupedObjects[value].push(object);
+    } else {
+      groupedObjects[value] = [object];
+    }
+  }
+
+  return Object.values(groupedObjects);
+}
+
+export function removeObjectsByValue(objects, key, value) {
+  return objects.filter(object => object[key] !== value);
+}

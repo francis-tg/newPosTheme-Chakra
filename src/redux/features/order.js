@@ -74,12 +74,12 @@ export const OrderSlice = createSlice({
       });
       state.orders.total = _.sumBy(state.orders.order, "total");
     },
-    setCommande: (state, action) => {
+    setCommande: (state, _) => {
       state.loading = true;
       if (state.type === "new") {
-        state.orders.total += state.orders.cp_total;
+        //state.orders.total += state.orders.cp_total;
         const cpOrder = [...state.orders.order, ...state.compositions];
-        const coObject = state.orders;
+        const coObject = {...state.orders};
         coObject.order = cpOrder;
         fetch(`${API_URL}/common/commande/new`, {
           method: "POST",

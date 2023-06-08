@@ -78,14 +78,16 @@ export const OrderSlice = createSlice({
       state.loading = true;
       if (state.type === "new") {
         state.orders.total += state.orders.cp_total;
-        state.orders.order = [...state.orders.order, ...state.compositions];
+        const cpOrder = [...state.orders.order, ...state.compositions];
+        const coObject = state.orders;
+        coObject.order = cpOrder;
         fetch(`${API_URL}/common/commande/new`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: sessionStorage.getItem("token")
+            Authorization: "Bearer " + sessionStorage.getItem("token")
           },
-          body: JSON.stringify(state.orders)
+          body: JSON.stringify(coObject)
         }).then(r => {
           if (r.status === 200) {
             window.location.href = "/";

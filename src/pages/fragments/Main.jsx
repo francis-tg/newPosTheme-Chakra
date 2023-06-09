@@ -24,6 +24,7 @@ import { addComposition, addOrder } from '../../redux/features/order';
 import AddComposBtn from '../../components/AddComposBtn';
 import CustomAlertDialog from '../../components/CustomAlertDialog';
 import MultiSelectMenu from '../../components/MultiselectMenu';
+import { setSelectedItem } from '../../redux/features/multicompose';
 function Main() {
   const [showPan, setShowPan] = useState(false);
   const [Categories, setCategories] = useState([]);
@@ -116,7 +117,7 @@ function Main() {
                 confirmText="Ajouter"
                 onConfirm={() => {
                   dispatch(addComposition(compositions));
-                  setInit(true)
+                  dispatch(setSelectedItem([]))
                 }}
               >
                 {/* <InputGroup>
@@ -135,7 +136,6 @@ function Main() {
                     setComposition(val)
                     
                   }}
-                onInit={()=>{isInit&&onClose()}}
                 ></MultiSelectMenu>
               </CustomAlertDialog>
               {FilterMenu.map((product, i) => (

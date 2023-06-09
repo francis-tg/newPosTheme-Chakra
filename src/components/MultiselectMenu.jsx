@@ -11,13 +11,17 @@ import {
   Input,
   FormControl,
 } from '@chakra-ui/react';
+import { setSelectedItem } from '../redux/features/multicompose';
+import { useDispatch, useSelector } from 'react-redux';
 
 const MultiSelectMenu = props => {
   const { label, options } = props;
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  /* const [selectedOptions, setSelectedOptions] = useState([]); */
   const [customValue, setCustomValue] = useState([]);
   const [tag, setTag] = useState(0);
   let prepValue = [...customValue];
+  const selectedOptions = useSelector((state)=>state.MultiCompose.SelectedItem)
+  
   function getRandomNumber(min, max) {
     // Generate a random decimal between 0 (inclusive) and 1 (exclusive)
     const randomDecimal = Math.random();
@@ -28,12 +32,13 @@ const MultiSelectMenu = props => {
     // Convert the number to an integer and return
     return Math.floor(randomInRange);
   }
+  const dispatch = useDispatch()
   useEffect(() => {
     setTag(getRandomNumber(150, 10000));
   }, []);
 
   return (
-    <Menu closeOnSelect={false} width="100%">
+    <Menu closeOnSelect={false} width="100%" >
       {({ onClose }) => (
         
         <>
@@ -61,7 +66,7 @@ const MultiSelectMenu = props => {
               <MenuItem
                 
                 onClick={() => {
-                  setSelectedOptions([]);
+                  dispatch(setSelectedItem([]));
                   setCustomValue([]);
                   onClose();
                 }}
@@ -103,19 +108,16 @@ const MultiSelectMenu = props => {
                     tag,
                   },
                 ]);
-
-                setSelectedOptions(values);
+                dispatch(setSelectedItem(values));
                 props.onChange(prepValue);
               }}
             >
               {options.map((option, k) => {
                 return (
                   <MenuItemOption
-                    
                     key={`multiselect-menu-${k}`}
                     type="button"
                     value={option.id}
-                    
                   >
                     {option.nom}
                   </MenuItemOption>

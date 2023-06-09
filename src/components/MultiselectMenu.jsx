@@ -35,6 +35,7 @@ const MultiSelectMenu = props => {
   return (
     <Menu closeOnSelect={false} width="100%">
       {({ onClose }) => (
+        
         <>
           <MenuButton
             type="button"
@@ -54,9 +55,11 @@ const MultiSelectMenu = props => {
               selectedOptions.length > 0 ? ` (${selectedOptions.length})` : tag
             }`}
           </MenuButton>
-          <MenuList width="sm">
-            <MenuGroup title={undefined}>
+          <MenuList width="sm" overflowY="auto"
+              maxHeight="sm" position="relative">
+            <MenuGroup title={undefined} >
               <MenuItem
+                
                 onClick={() => {
                   setSelectedOptions([]);
                   setCustomValue([]);
@@ -66,7 +69,7 @@ const MultiSelectMenu = props => {
                 Réinitialiser
               </MenuItem>
             </MenuGroup>
-            <FormControl p={2}>
+            <FormControl  >
               <Input type="search" placeholder="Rechercher un article ici" />
             </FormControl>
             <MenuDivider />
@@ -108,9 +111,11 @@ const MultiSelectMenu = props => {
               {options.map((option, k) => {
                 return (
                   <MenuItemOption
+                    
                     key={`multiselect-menu-${k}`}
                     type="button"
                     value={option.id}
+                    
                   >
                     {option.nom}
                   </MenuItemOption>

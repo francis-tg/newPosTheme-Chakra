@@ -10,6 +10,7 @@ import {
   Grid,
   GridItem,
   Icon,
+  Input,
   Slide,
   Text,
   useDisclosure,
@@ -31,7 +32,7 @@ function Main() {
   const [FilterMenu, setFilterMenu] = useState(Products);
   const [compositions, setComposition] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+  const [isInit,setInit] = useState(false)
   function onFilter(id) {
     if (id === 'all') {
       return setFilterMenu(Products);
@@ -42,6 +43,9 @@ function Main() {
   const dispatch = useDispatch();
   function togglePan() {
     setShowPan(!showPan);
+  }
+  function onSearch(e) {
+    return setFilterMenu(Products.filter(product => String(product.nom).toLowerCase().includes(String(e.target.value).toLowerCase())));
   }
   async function fetchProduitsAndCategories() {
     const { categories, produits } = await fetchAPI(
@@ -100,6 +104,7 @@ function Main() {
             <Text fontSize="xl" color="gray.500">
               Products
             </Text>
+            <Input type='search' onChange={onSearch} placeholder='Chercher un article ici...'/>
             <ProductContainer>
               <AddComposBtn onClick={onOpen} />
               <CustomAlertDialog
@@ -111,6 +116,7 @@ function Main() {
                 confirmText="Ajouter"
                 onConfirm={() => {
                   dispatch(addComposition(compositions));
+                  setInit(true)
                 }}
               >
                 {/* <InputGroup>
@@ -125,7 +131,11 @@ function Main() {
                 <MultiSelectMenu
                   label="Selectionner les produit pour la composition"
                   options={Products}
-                  onChange={val => setComposition(val)}
+                  onChange={val => {
+                    setComposition(val)
+                    
+                  }}
+                onInit={()=>{isInit&&onClose()}}
                 ></MultiSelectMenu>
               </CustomAlertDialog>
               {FilterMenu.map((product, i) => (

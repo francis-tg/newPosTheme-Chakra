@@ -168,7 +168,7 @@ function Main() {
           top={0}
           bg="whatsapp.100"
           width="100%"
-          height={{ base: '100%', xl: '95%' }}
+          height={{ base: '100%', xl: '95vh' }}
         >
           <Panier />
         </GridItem>

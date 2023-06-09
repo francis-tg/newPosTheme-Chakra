@@ -55,10 +55,10 @@ function Panier({key}) {
       >
         <Grid gap={2}>
           {orders.map((simpleOrder, i) =>
-            <PanierItem article={simpleOrder} index={i} />
+            <PanierItem article={simpleOrder} index={i} key={i} />
           )}
           {groupedCompos.map((compos, i) =>
-            <ComposPanierItem article={compos} index={i} />
+            <ComposPanierItem article={compos} index={i} key={i} />
           )}
         </Grid>
       </Box>

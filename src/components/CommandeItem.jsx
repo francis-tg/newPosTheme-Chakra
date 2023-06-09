@@ -1,7 +1,7 @@
 import {Box, Flex, Text, Badge, useColorModeValue} from "@chakra-ui/react";
 import React from "react";
 
-function CommandeItem() {
+function CommandeItem({commande}) {
   const textColor = useColorModeValue("black", "black");
   return (
     <Box
@@ -14,14 +14,22 @@ function CommandeItem() {
     >
       <Flex justifyContent="start" direction="column">
         <Flex justifyContent="space-between" pb={4}>
-          <Text>TDV-5</Text>
-          <Text>1800 F</Text>
+          <Text>
+            {commande.cmd_id}
+          </Text>
+          <Text>
+            {commande.total} F
+          </Text>
         </Flex>
 
         <Flex justifyContent="space-between" pt={4}>
-          <Text>3 Articles</Text>
           <Text>
-            <Badge bg="orange.400">En cours</Badge>
+            {[...commande.products, ...commande.menus].length} Articles
+          </Text>
+          <Text>
+            <Badge bg={commande.status === 1 ? "orange.400" : "green.400"}>
+              {commande.status === 1 ? "En cours" : "Terminé"}
+            </Badge>
           </Text>
         </Flex>
       </Flex>

@@ -48,6 +48,16 @@ function Main() {
   function onSearch(e) {
     return setFilterMenu(Products.filter(product => String(product.nom).toLowerCase().includes(String(e.target.value).toLowerCase())));
   }
+  async function fetchCommande() {
+    const { commandes } = await fetchAPI(
+      'GET',
+      `${API_URL}/common/commande/all`,
+      {},
+      { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+    ).then(async r => await r.json());
+    
+    setCommandes(commandes);
+  }
   async function fetchProduitsAndCategories() {
     const { categories, produits } = await fetchAPI(
       'GET',
@@ -64,9 +74,11 @@ function Main() {
     window.addEventListener("resize", () => {
       if (window.screen.width > 780) {
     setShowPan(false)
-  }
+      }
+      
     })
-  }, [showPan]);
+    fetchCommande()
+  }, [showPan,Commandes]);
   return (
     <>
       <Grid
@@ -81,15 +93,10 @@ function Main() {
       >
         <GridItem colSpan={3} rowSpan={2}>
           <CommandeContainer>
-            <CommandeItem />
-            <CommandeItem />
-            <CommandeItem />
-            <CommandeItem />
-            <CommandeItem />
-            <CommandeItem />
-            <CommandeItem />
-            <CommandeItem />
-            <CommandeItem />
+            {Commandes.map((c, i) => (
+              <CommandeItem commande={c} key={i}/>
+            ))}
+            
           </CommandeContainer>
           <CategoryContainer>
             <CategoryItem name="Tous" onClick={() => onFilter('all')} />

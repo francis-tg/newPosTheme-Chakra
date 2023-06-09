@@ -30,7 +30,7 @@ export const OrderSlice = createSlice({
           produitName: action.payload.nom,
           product_id: action.payload.id,
           price: action.payload.price,
-          secteur: action.payload.secteur.id,
+          secteur_id: action.payload.secteur.id,
           quantite: 1,
           total: action.payload.price
         });

@@ -1,7 +1,10 @@
-import {Box, Divider, Flex, GridItem, Text} from "@chakra-ui/react";
+import {Box, Divider, Flex, GridItem, Text, useToast} from "@chakra-ui/react";
 import React from "react";
 
 function ProducItem({produit, onClick}) {
+  const toast = useToast({
+    position: "top-right"
+  });
   return (
     <GridItem
       _disabled={{opacity: "0.5", cursor: "not-allowed"}}
@@ -10,7 +13,14 @@ function ProducItem({produit, onClick}) {
       p={5}
       rounded="md"
       onClick={() => {
-        produit["Article.quantite"] >= 0 && onClick();
+        produit["Article.quantite"] <= 0
+          ? toast({
+              title: "Attention!",
+              description: "Ooups!...",
+              status: "error",
+              duration: 5000
+            })
+          : onClick();
       }}
     >
       <Box cursor="pointer">

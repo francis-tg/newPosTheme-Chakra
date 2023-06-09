@@ -33,7 +33,7 @@ function Main() {
   const [FilterMenu, setFilterMenu] = useState(Products);
   const [compositions, setComposition] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isInit,setInit] = useState(false)
+  
   function onFilter(id) {
     if (id === 'all') {
       return setFilterMenu(Products);

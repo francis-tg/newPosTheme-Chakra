@@ -113,7 +113,7 @@ const MultiSelectMenu = props => {
               }}
             >
               {options.map((option, k) => {
-                return (
+                return String(option["Secteur.nom"]).toLowerCase() ==="cuisine" &&(
                   <MenuItemOption
                     key={`multiselect-menu-${k}`}
                     type="button"

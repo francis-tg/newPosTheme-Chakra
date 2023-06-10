@@ -36,7 +36,7 @@ export const OrderSlice = createSlice({
         });
       } else {
       }
-      state.orders.total = _.sumBy(state.orders.order, "total");
+      state.orders.total += action.payload.price;
     },
     setBarista: (state, action) => {
       state.orders = {...state.orders, user_id: action.payload};

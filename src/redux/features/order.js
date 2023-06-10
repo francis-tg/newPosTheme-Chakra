@@ -34,9 +34,10 @@ export const OrderSlice = createSlice({
           quantite: 1,
           total: action.payload.price
         });
+        state.orders.total += action.payload.price;
       } else {
       }
-      state.orders.total += action.payload.price;
+      
     },
     setBarista: (state, action) => {
       state.orders = {...state.orders, user_id: action.payload};

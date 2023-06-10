@@ -24,7 +24,7 @@ function CommandeItem({commande}) {
 
         <Flex justifyContent="space-between" pt={4}>
           <Text>
-            {[...commande.products, ...commande.menus].length} Articles
+            {commande.products.length>=0 && commande.menus.length>=0? [...commande.products, ...commande.menus].length:0} Articles
           </Text>
           <Text>
             <Badge bg={commande.status === 1 ? "orange.400" : "green.400"}>

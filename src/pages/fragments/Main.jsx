@@ -78,7 +78,7 @@ function Main() {
       
     })
     fetchCommande()
-  }, [showPan,Commandes]);
+  }, [showPan]);
   return (
     <>
       <Grid

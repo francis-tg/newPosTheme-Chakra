@@ -11,7 +11,7 @@ import {useColorModeValue, useToast} from "@chakra-ui/react";
 function Home() {
   const type = useSelector(state => state.OrderReduce.type);
   const serveuse = useSelector(state => state.OrderReduce.orders.user_id);
-  const table = useSelector(state => state.OrderReduce.orders.table_id);
+  const table = useSelector(state => state.OrderReduce.orders.table);
   const toastMode = useColorModeValue("left-accent", "solid");
   const toast = useToast({variant: toastMode, position: "top-right"});
   React.useEffect(() => {

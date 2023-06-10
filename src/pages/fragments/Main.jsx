@@ -169,7 +169,7 @@ function Main() {
             width="350px"
             height={{ base: '100%', xl: '100%' }}
           >
-            <Panier />
+            <Panier onClose={togglePan} />
           </GridItem>
         </Slide>
         <GridItem
@@ -187,7 +187,7 @@ function Main() {
           width="100%"
           height={{ base: '100%', xl: '95vh' }}
         >
-          <Panier />
+          <Panier onClose={togglePan} />
         </GridItem>
       </Grid>
       <Button

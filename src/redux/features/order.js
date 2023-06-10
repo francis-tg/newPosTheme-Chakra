@@ -6,7 +6,7 @@ import _ from "lodash";
 const initialState = {
   orders: {
     user_id: "",
-    table_id: "",
+    table: "",
     table_name: "",
     order: [],
     total: 0,
@@ -44,7 +44,7 @@ export const OrderSlice = createSlice({
     setTable: (state, action) => {
       state.orders = {
         ...state.orders,
-        table_id: action.payload.id,
+        table: action.payload.id,
         table_name: action.payload.nom
       };
     },

@@ -55,7 +55,7 @@ function Main() {
       {},
       { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
     ).then(async r => await r.json());
-    console.log(commandes)
+    
     commandes && setCommandes(commandes);
   }
   async function fetchProduitsAndCategories() {
@@ -78,6 +78,7 @@ function Main() {
       
     })
     fetchCommande()
+    console.log(Commandes)
   }, [showPan,Commandes]);
   return (
     <>

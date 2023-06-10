@@ -94,7 +94,7 @@ function Main() {
       >
         <GridItem colSpan={3} rowSpan={2}>
           <CommandeContainer>
-            {Commandes.map((c, i) => (
+            {Commandes.length>0&&Commandes.map((c, i) => (
               <CommandeItem commande={c} key={i}/>
             ))}
             

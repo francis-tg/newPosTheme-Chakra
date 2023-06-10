@@ -78,7 +78,6 @@ function Main() {
       
     })
     fetchCommande()
-    console.log(Commandes)
   }, [showPan,Commandes]);
   return (
     <>

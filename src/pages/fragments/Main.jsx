@@ -56,7 +56,7 @@ function Main() {
       { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
     ).then(async r => await r.json());
     
-    commandes && setCommandes(commandes);
+    setCommandes(commandes);
   }
   async function fetchProduitsAndCategories() {
     const { categories, produits } = await fetchAPI(
@@ -93,7 +93,7 @@ function Main() {
       >
         <GridItem colSpan={3} rowSpan={2}>
           <CommandeContainer>
-            {Commandes && Commandes.map((c, i) => (
+            {Commandes.map((c, i) => (
               <CommandeItem commande={c} key={i}/>
             ))}
             

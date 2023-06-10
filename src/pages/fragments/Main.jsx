@@ -49,7 +49,7 @@ function Main() {
     return setFilterMenu(Products.filter(product => String(product.nom).toLowerCase().includes(String(e.target.value).toLowerCase())));
   }
   async function fetchCommande() {
-    const { commandes } = await fetchAPI(
+    const commandes = await fetchAPI(
       'GET',
       `${API_URL}/common/commande/all`,
       {},

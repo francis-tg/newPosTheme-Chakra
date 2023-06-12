@@ -5,13 +5,18 @@ import ProductContainer from '../../components/ProductContainer';
 import ProducItem from '../../components/ProducItem';
 import { FaShoppingCart } from 'react-icons/fa';
 import {
+  Badge,
   Box,
   Button,
+  Fade,
+  Flex,
   Grid,
   GridItem,
+  Heading,
   Icon,
   Input,
   Slide,
+  Spacer,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -19,7 +24,7 @@ import CategoryContainer from '../../components/CategoryContainer';
 import CategoryItem from '../../components/CategoryItem';
 import { API_URL, fetchAPI } from '../../api/common';
 import Panier from '../../components/Panier';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addComposition, addOrder } from '../../redux/features/order';
 import AddComposBtn from '../../components/AddComposBtn';
 import CustomAlertDialog from '../../components/CustomAlertDialog';
@@ -33,7 +38,9 @@ function Main() {
   const [FilterMenu, setFilterMenu] = useState(Products);
   const [compositions, setComposition] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+   const orders = useSelector(state => state.OrderReduce.orders.order);
+  const orderTotal = useSelector(state => state.OrderReduce.orders.total);
+  const Compositions = useSelector(state => state.OrderReduce.compositions);
   function onFilter(id) {
     if (id === 'all') {
       return setFilterMenu(Products);
@@ -140,6 +147,7 @@ function Main() {
                   label="Selectionner les produit pour la composition"
                   options={Products}
                   onChange={val => {
+                    console.log(val)
                     setComposition(val)
                     
                   }}
@@ -154,6 +162,20 @@ function Main() {
               ))}
             </ProductContainer>
           </Box>
+          
+            
+            <Fade in={!![...orders,...Compositions].length>0}  >
+            <Flex justifyContent={"center"} width={"100%"}>
+              <Flex position={"fixed"} m={"auto"} rounded={"md"} bottom={0} background={"whatsapp.400"} w={"60%"} height={"40px"} alignItems={"center"} p={4}>
+                <Heading color={"black"} size={"md"} >{[...orders,...Compositions].length} article{[...orders,...Compositions].length > 1 && "s"} choisi{[...orders,...Compositions].length > 1 && "s"} </Heading>
+                <Spacer />
+                <Heading size={"md"} color={"black"}>
+                  Total:  {orderTotal} F
+                </Heading>
+               </Flex>
+            </Flex>
+        </Fade>
+      
         </GridItem>
         <Slide direction="left" in={showPan}>
           <GridItem
@@ -202,6 +224,7 @@ function Main() {
       >
         <Icon as={FaShoppingCart} />
       </Button>
+     
     </>
   );
 }

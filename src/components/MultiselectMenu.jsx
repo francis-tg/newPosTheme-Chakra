@@ -9,6 +9,7 @@ import {
   MenuOptionGroup,
   MenuItemOption,
   Input,
+  Badge,
   FormControl,
 } from '@chakra-ui/react';
 import { setSelectedItem } from '../redux/features/multicompose';
@@ -84,10 +85,30 @@ const MultiSelectMenu = props => {
               value={selectedOptions}
               type="checkbox"
               onChange={values => {
+                console.log(values)
                 const optionCp = options.find(
                   o => o.id === values[values.length - 1]
                 );
-                prepValue.push({
+                const tArr = []
+                 values.map((v) => {
+                  const toptionCp = options.find(
+                    o => o.id === v
+                   );
+                   tArr.push({
+                  product_id: toptionCp.id,
+                  produitName: toptionCp.nom,
+                  price: toptionCp.price,
+                  secteur_id: toptionCp.secteur,
+                  total: toptionCp.price,
+                  quantite: 1,
+                  tag,
+                })
+                 
+                  
+                 })
+                prepValue = [...tArr]
+                /*if ( optionCp) {
+                  prepValue = [{
                   product_id: optionCp.id,
                   produitName: optionCp.nom,
                   price: optionCp.price,
@@ -95,7 +116,7 @@ const MultiSelectMenu = props => {
                   total: optionCp.price,
                   quantite: 1,
                   tag,
-                });
+                }];
                 setCustomValue(prev => [
                   ...prev,
                   {
@@ -108,20 +129,24 @@ const MultiSelectMenu = props => {
                     tag,
                   },
                 ]);
+                  console.log(prepValue)
+                  props.onChange(prepValue);
+                }*/
                 dispatch(setSelectedItem(values));
                 props.onChange(prepValue);
+                
               }}
             >
               {options.map((option, k) => {
-                return String(option["Secteur.nom"]).toLowerCase() ==="cuisine" &&(
+                return String(option["Secteur.nom"]).toLowerCase() ==="cuisine" && option["Article.quantite"]>0?(
                   <MenuItemOption
                     key={`multiselect-menu-${k}`}
                     type="button"
                     value={option.id}
                   >
-                    {option.nom}
+                    {option.nom} <Badge bg={"orange.400"}>{option["Article.quantite"]}</Badge>
                   </MenuItemOption>
-                );
+                ): "";
               })}
             </MenuOptionGroup>
           </MenuList>

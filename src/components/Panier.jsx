@@ -16,7 +16,7 @@ import ComposPanierItem from "./ComposPanierItem";
 import {groupObjectsByValue} from "../api/common";
 import {setCommande} from "../redux/features/order";
 
-function Panier({key,onClose}) {
+function Panier({key, onClose}) {
   const orders = useSelector(state => state.OrderReduce.orders.order);
   const orderTotal = useSelector(state => state.OrderReduce.orders.total);
   const Compositions = useSelector(state => state.OrderReduce.compositions);
@@ -40,7 +40,7 @@ function Panier({key,onClose}) {
           <Heading size="md">
             {orderTotal} F
           </Heading>
-          <Button onClick={onClose}>
+          <Button onClick={onClose} display={{base: "block", xl: "none"}}>
             <Icon as={FaTimes} />
           </Button>
         </Flex>

@@ -2,9 +2,10 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {API_URL, removeObjectsByValue} from "../../api/common";
 import _ from "lodash";
+import { addLocalStorage, getLocalSorage } from "../../api/localStorage";
 
 const initialState = {
-  orders: {
+  orders:  {
     user_id: "",
     table: "",
     table_name: "",
@@ -14,7 +15,8 @@ const initialState = {
   },
   compositions: [],
   type: "",
-  loading: false
+  loading: false,
+  ...getLocalSorage()
 };
 
 export const OrderSlice = createSlice({
@@ -34,13 +36,16 @@ export const OrderSlice = createSlice({
           quantite: 1,
           total: action.payload.price
         });
+      
         state.orders.total += action.payload.price;
+         addLocalStorage(state)
       } else {
       }
       
     },
     setBarista: (state, action) => {
-      state.orders = {...state.orders, user_id: action.payload};
+      state.orders = { ...state.orders, user_id: action.payload };
+       addLocalStorage(state)
     },
     setTable: (state, action) => {
       state.orders = {
@@ -48,7 +53,9 @@ export const OrderSlice = createSlice({
         table: action.payload.id,
         table_name: action.payload.nom
       };
+       addLocalStorage(state)
     },
+
     addQuantity: (state, action) => {
       state.orders.order.filter((o, i) => {
         if (o.product_id === parseInt(action.payload.product_id)) {
@@ -58,6 +65,7 @@ export const OrderSlice = createSlice({
         }
       });
       state.orders.total = _.sumBy(state.orders.order, "total");
+       addLocalStorage(state)
     },
     removeQuantity: (state, action) => {
       state.orders.order.filter((o, i) => {
@@ -74,6 +82,7 @@ export const OrderSlice = createSlice({
         }
       });
       state.orders.total = _.sumBy(state.orders.order, "total");
+       addLocalStorage(state)
     },
     setCommande: (state, _) => {
       state.loading = true;
@@ -94,6 +103,7 @@ export const OrderSlice = createSlice({
             window.location.href = "/";
           }
         });
+        window.localStorage.removeItem("commande")
       } else {
         state.orders.total += state.orders.cp_total;
 
@@ -114,6 +124,7 @@ export const OrderSlice = createSlice({
     },
     setType: (state, action) => {
       state.type = action.payload;
+       addLocalStorage(state)
     },
     removeArticle: (state, action) => {
       /*  const getIt = state.orders.order.filter(
@@ -129,6 +140,7 @@ export const OrderSlice = createSlice({
         state.orders.order.splice(action.payload.index, 1);
       }
       state.orders.total = _.sumBy(state.orders.order, "total");
+       addLocalStorage(state)
     },
     editCommande(state, action) {
       const value = action.payload;
@@ -141,10 +153,12 @@ export const OrderSlice = createSlice({
         total: value.total,
         commande_id: value.id
       };
+       addLocalStorage(state)
     },
     addComposition: (state, action) => {
       state.compositions = [...state.compositions, ...action.payload];
       state.orders.total += _.sumBy(action.payload, "total");
+       addLocalStorage(state)
     }
   }
 });

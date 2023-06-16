@@ -5,7 +5,6 @@ import ProductContainer from '../../components/ProductContainer';
 import ProducItem from '../../components/ProducItem';
 import { FaShoppingCart } from 'react-icons/fa';
 import {
-  Badge,
   Box,
   Button,
   Fade,

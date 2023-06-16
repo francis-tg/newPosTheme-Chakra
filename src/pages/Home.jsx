@@ -40,7 +40,7 @@ function Home() {
         description: `La table ${data} s'est libéré`
       });
     });
-  }, []);
+  }, [toast]);
   let render = "";
   if (type === "edit") {
     return <Main />;

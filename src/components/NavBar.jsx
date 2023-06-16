@@ -23,7 +23,7 @@ function NavBar() {
   const [authState, setAuthState] = useState(false)
   useEffect(() => {
     setAuthState(isAuth)
-  },[authState])
+  },[authState, isAuth])
   return (
     <Flex align="center" p={2} bg="orange.100" textColor={textColor}>
       <Heading as="h5" size={{sm: "sm", lg: "lg"}}>
@@ -37,7 +37,7 @@ function NavBar() {
           </MenuButton>
           <MenuList>
           <MenuItem as={Button} bg="red.400" size="sm" onClick={()=>{dispatch(logout())}}>Déconnexion</MenuItem>
-  </MenuList>
+         </MenuList>
         </Menu>
       
       

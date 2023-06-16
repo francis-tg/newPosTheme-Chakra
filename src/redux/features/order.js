@@ -42,6 +42,12 @@ export const OrderSlice = createSlice({
       } else {
       }
       
+      
+    },
+    videPanier: (state, _) => {
+      state.orders.order = []
+      state.compositions = []
+      addLocalStorage(state)
     },
     setBarista: (state, action) => {
       state.orders = { ...state.orders, user_id: action.payload };
@@ -173,7 +179,8 @@ export const {
   setType,
   removeArticle,
   editCommande,
-  addComposition
+  addComposition,
+  videPanier
 } = OrderSlice.actions;
 
 export default OrderSlice.reducer;

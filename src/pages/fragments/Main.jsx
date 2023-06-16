@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import CommandeItem from '../../components/CommandeItem';
 import CommandeContainer from '../../components/CommandeContainer';
 import ProductContainer from '../../components/ProductContainer';
@@ -7,6 +7,13 @@ import { FaShoppingCart } from 'react-icons/fa';
 import {
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
   Fade,
   Flex,
   Grid,
@@ -14,7 +21,6 @@ import {
   Heading,
   Icon,
   Input,
-  Slide,
   Spacer,
   Text,
   useDisclosure,
@@ -24,11 +30,12 @@ import CategoryItem from '../../components/CategoryItem';
 import { API_URL, fetchAPI } from '../../api/common';
 import Panier from '../../components/Panier';
 import { useDispatch, useSelector } from 'react-redux';
-import { addComposition, addOrder } from '../../redux/features/order';
+import { addComposition, addOrder, setCommande, videPanier } from '../../redux/features/order';
 import AddComposBtn from '../../components/AddComposBtn';
 import CustomAlertDialog from '../../components/CustomAlertDialog';
 import MultiSelectMenu from '../../components/MultiselectMenu';
 import { setSelectedItem } from '../../redux/features/multicompose';
+import ListOrder from '../../components/ListOrder';
 function Main() {
   const [showPan, setShowPan] = useState(false);
   const [Categories, setCategories] = useState([]);
@@ -40,12 +47,16 @@ function Main() {
    const orders = useSelector(state => state.OrderReduce.orders.order);
   const orderTotal = useSelector(state => state.OrderReduce.orders.total);
   const Compositions = useSelector(state => state.OrderReduce.compositions);
+  const btnRef = useRef()
   function onFilter(id) {
     if (id === 'all') {
       return setFilterMenu(Products);
     } else {
       return setFilterMenu(Products.filter(product => product.category === id));
     }
+  }
+  function closePane() {
+    setShowPan(false)
   }
   const dispatch = useDispatch();
   function togglePan() {
@@ -83,6 +94,7 @@ function Main() {
       }
       
     })
+   
     fetchCommande()
   }, [showPan]);
   return (
@@ -131,17 +143,9 @@ function Main() {
                 onConfirm={() => {
                   dispatch(addComposition(compositions));
                   dispatch(setSelectedItem([]))
+                  onClose()
                 }}
               >
-                {/* <InputGroup>
-                    <Select>
-                      <option value=''>Selection un produit</option>
-                      {Products.map((p, i) => (
-                        <option value={p.id} key={i}>{ p.nom }</option>
-                      ))}
-                    </Select>
-                    <IconButton icon={<FaPlus/>} bg="orange.500"/>
-                  </InputGroup> */}
                 <MultiSelectMenu
                   label="Selectionner les produit pour la composition"
                   options={Products}
@@ -163,7 +167,7 @@ function Main() {
           </Box>
           
             
-            <Fade in={!![...orders,...Compositions].length>0}  >
+            <Fade in={!![...orders,...Compositions].length>0}  onClick={togglePan}>
             <Flex justifyContent={"center"} width={"100%"}>
               <Flex position={"fixed"} m={"auto"} rounded={"md"} bottom={0} background={"whatsapp.400"} w={"60%"} height={"40px"} alignItems={"center"} p={4}>
                 <Heading color={"black"} size={"md"} >{[...orders,...Compositions].length} article{[...orders,...Compositions].length > 1 && "s"} choisi{[...orders,...Compositions].length > 1 && "s"} </Heading>
@@ -176,7 +180,7 @@ function Main() {
         </Fade>
       
         </GridItem>
-        <Slide direction="left" in={showPan}>
+        {/* <Slide direction="left" in={showPan}>
           <GridItem
             rowSpan={2}
             id="right-pan"
@@ -192,7 +196,33 @@ function Main() {
           >
             <Panier onClose={togglePan} />
           </GridItem>
-        </Slide>
+        </Slide> */}
+        <Drawer isOpen={showPan} placement='left' size={"md"} finalFocusRef={btnRef} onClose={closePane}>
+           <DrawerOverlay />
+          <DrawerContent>
+          <DrawerCloseButton />
+            <DrawerHeader>
+              Commandes
+              <Text>
+
+              </Text>
+            </DrawerHeader>
+
+          <DrawerBody>
+             <ListOrder/>
+          </DrawerBody>
+
+          <DrawerFooter>
+              <Button variant='outline' colorScheme='red' mr={3} onClick={() => {
+                dispatch(videPanier())
+                closePane()
+            }}>
+              Vider le panier
+            </Button>
+            <Button colorScheme='whatsapp' onClick={() => dispatch(setCommande())} w={"100%"}>Commander</Button>
+          </DrawerFooter>
+        </DrawerContent>
+        </Drawer>
         <GridItem
           rowSpan={2}
           display={{ base: 'none', xl: 'block' }}
@@ -218,6 +248,7 @@ function Main() {
         right={5}
         size="lg"
         rounded="lg"
+        ref={btnRef}
         bg="orange"
         display={{ base: 'block', xl: 'none' }}
       >

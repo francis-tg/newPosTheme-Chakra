@@ -1,12 +1,12 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isAuth: !!sessionStorage.getItem("token"),
-  userData: {}
+  isAuth: !!sessionStorage.getItem('token'),
+  userData: {},
 };
 
 export const UserState = createSlice({
-  name: "userState",
+  name: 'userState',
   initialState,
   reducers: {
     setUserStatus: (state, action) => {
@@ -15,14 +15,15 @@ export const UserState = createSlice({
     setUserData: (state, action) => {
       state.userData = action.payload;
     },
-    logout(state, payload) {
-      sessionStorage.removeItem("token");
+    logout(state,_) {
+      sessionStorage.removeItem('token');
       state.userData = {};
+      sessionStorage.clear();
       return window.location.reload();
-    }
-  }
+    },
+  },
 });
 
-export const {setUserStatus, setUserData, logout} = UserState.actions;
+export const { setUserStatus, setUserData, logout } = UserState.actions;
 
 export default UserState.reducer;

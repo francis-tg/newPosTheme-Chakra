@@ -30,7 +30,12 @@ import CategoryItem from '../../components/CategoryItem';
 import { API_URL, fetchAPI } from '../../api/common';
 import Panier from '../../components/Panier';
 import { useDispatch, useSelector } from 'react-redux';
-import { addComposition, addOrder, setCommande, videPanier } from '../../redux/features/order';
+import {
+  addComposition,
+  addOrder,
+  setCommande,
+  videPanier,
+} from '../../redux/features/order';
 import AddComposBtn from '../../components/AddComposBtn';
 import CustomAlertDialog from '../../components/CustomAlertDialog';
 import MultiSelectMenu from '../../components/MultiselectMenu';
@@ -44,10 +49,10 @@ function Main() {
   const [FilterMenu, setFilterMenu] = useState(Products);
   const [compositions, setComposition] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-   const orders = useSelector(state => state.OrderReduce.orders.order);
+  const orders = useSelector(state => state.OrderReduce.orders.order);
   const orderTotal = useSelector(state => state.OrderReduce.orders.total);
   const Compositions = useSelector(state => state.OrderReduce.compositions);
-  const btnRef = useRef()
+  const btnRef = useRef();
   function onFilter(id) {
     if (id === 'all') {
       return setFilterMenu(Products);
@@ -56,14 +61,20 @@ function Main() {
     }
   }
   function closePane() {
-    setShowPan(false)
+    setShowPan(false);
   }
   const dispatch = useDispatch();
   function togglePan() {
     setShowPan(!showPan);
   }
   function onSearch(e) {
-    return setFilterMenu(Products.filter(product => String(product.nom).toLowerCase().includes(String(e.target.value).toLowerCase())));
+    return setFilterMenu(
+      Products.filter(product =>
+        String(product.nom)
+          .toLowerCase()
+          .includes(String(e.target.value).toLowerCase())
+      )
+    );
   }
   async function fetchCommande() {
     const commandes = await fetchAPI(
@@ -72,7 +83,7 @@ function Main() {
       {},
       { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
     ).then(async r => await r.json());
-    
+
     commandes && setCommandes(commandes);
   }
   async function fetchProduitsAndCategories() {
@@ -88,14 +99,13 @@ function Main() {
   }
   React.useEffect(() => {
     fetchProduitsAndCategories();
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       if (window.screen.width > 780) {
-    setShowPan(false)
+        setShowPan(false);
       }
-      
-    })
-   
-    fetchCommande()
+    });
+
+    fetchCommande();
   }, [showPan]);
   return (
     <>
@@ -111,10 +121,9 @@ function Main() {
       >
         <GridItem colSpan={3} rowSpan={2}>
           <CommandeContainer>
-            {Commandes.length>0&&Commandes.map((c, i) => (
-              <CommandeItem commande={c} key={i}/>
-            ))}
-            
+            {typeof Commandes === 'object' &&
+              Commandes.length > 0 &&
+              Commandes.map((c, i) => <CommandeItem commande={c} key={i} />)}
           </CommandeContainer>
           <CategoryContainer>
             <CategoryItem name="Tous" onClick={() => onFilter('all')} />
@@ -130,7 +139,11 @@ function Main() {
             <Text fontSize="xl" color="gray.500">
               Products
             </Text>
-            <Input type='search' onChange={onSearch} placeholder='Chercher un article ici...'/>
+            <Input
+              type="search"
+              onChange={onSearch}
+              placeholder="Chercher un article ici..."
+            />
             <ProductContainer>
               <AddComposBtn onClick={onOpen} />
               <CustomAlertDialog
@@ -142,17 +155,16 @@ function Main() {
                 confirmText="Ajouter"
                 onConfirm={() => {
                   dispatch(addComposition(compositions));
-                  dispatch(setSelectedItem([]))
-                  onClose()
+                  dispatch(setSelectedItem([]));
+                  onClose();
                 }}
               >
                 <MultiSelectMenu
                   label="Selectionner les produit pour la composition"
                   options={Products}
                   onChange={val => {
-                    console.log(val)
-                    setComposition(val)
-                    
+                    console.log(val);
+                    setComposition(val);
                   }}
                 ></MultiSelectMenu>
               </CustomAlertDialog>
@@ -165,20 +177,35 @@ function Main() {
               ))}
             </ProductContainer>
           </Box>
-          
-            
-            <Fade in={!![...orders,...Compositions].length>0}  onClick={togglePan}>
-            <Flex justifyContent={"center"} width={"100%"}>
-              <Flex position={"fixed"} m={"auto"} rounded={"md"} bottom={0} background={"whatsapp.400"} w={"60%"} height={"40px"} alignItems={"center"} p={4}>
-                <Heading color={"black"} size={"md"} >{[...orders,...Compositions].length} article{[...orders,...Compositions].length > 1 && "s"} choisi{[...orders,...Compositions].length > 1 && "s"} </Heading>
-                <Spacer />
-                <Heading size={"md"} color={"black"}>
-                  Total:  {orderTotal} F
+
+          <Fade
+            in={!![...orders, ...Compositions].length > 0}
+            onClick={togglePan}
+          >
+            <Flex justifyContent={'center'} width={'100%'}>
+              <Flex
+                position={'fixed'}
+                m={'auto'}
+                rounded={'md'}
+                bottom={0}
+                background={'whatsapp.400'}
+                w={'60%'}
+                height={'40px'}
+                alignItems={'center'}
+                p={4}
+              >
+                <Heading color={'black'} size={'md'}>
+                  {[...orders, ...Compositions].length} article
+                  {[...orders, ...Compositions].length > 1 && 's'} choisi
+                  {[...orders, ...Compositions].length > 1 && 's'}{' '}
                 </Heading>
-               </Flex>
+                <Spacer />
+                <Heading size={'md'} color={'black'}>
+                  Total: {orderTotal} F
+                </Heading>
+              </Flex>
             </Flex>
-        </Fade>
-      
+          </Fade>
         </GridItem>
         {/* <Slide direction="left" in={showPan}>
           <GridItem
@@ -197,31 +224,46 @@ function Main() {
             <Panier onClose={togglePan} />
           </GridItem>
         </Slide> */}
-        <Drawer isOpen={showPan} placement='left' size={"md"} finalFocusRef={btnRef} onClose={closePane}>
-           <DrawerOverlay />
+        <Drawer
+          isOpen={showPan}
+          placement="left"
+          size={'md'}
+          finalFocusRef={btnRef}
+          onClose={closePane}
+        >
+          <DrawerOverlay />
           <DrawerContent>
-          <DrawerCloseButton />
+            <DrawerCloseButton />
             <DrawerHeader>
               Commandes
-              <Text>
-
-              </Text>
+              <Text></Text>
             </DrawerHeader>
 
-          <DrawerBody>
-             <ListOrder/>
-          </DrawerBody>
+            <DrawerBody>
+              <ListOrder />
+            </DrawerBody>
 
-          <DrawerFooter>
-              <Button variant='outline' colorScheme='red' mr={3} onClick={() => {
-                dispatch(videPanier())
-                closePane()
-            }}>
-              Vider le panier
-            </Button>
-            <Button colorScheme='whatsapp' onClick={() => dispatch(setCommande())} w={"100%"}>Commander</Button>
-          </DrawerFooter>
-        </DrawerContent>
+            <DrawerFooter>
+              <Button
+                variant="outline"
+                colorScheme="red"
+                mr={3}
+                onClick={() => {
+                  dispatch(videPanier());
+                  closePane();
+                }}
+              >
+                Vider le panier
+              </Button>
+              <Button
+                colorScheme="whatsapp"
+                onClick={() => dispatch(setCommande())}
+                w={'100%'}
+              >
+                Commander
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
         </Drawer>
         <GridItem
           rowSpan={2}
@@ -254,7 +296,6 @@ function Main() {
       >
         <Icon as={FaShoppingCart} />
       </Button>
-     
     </>
   );
 }

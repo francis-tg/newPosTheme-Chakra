@@ -1,28 +1,55 @@
 /* eslint-disable no-dupe-keys */
-import {createSlice} from "@reduxjs/toolkit";
-import {API_URL, removeObjectsByValue} from "../../api/common";
-import _ from "lodash";
-import { addLocalStorage, getLocalSorage } from "../../api/localStorage";
+import { createSlice } from '@reduxjs/toolkit';
+import { API_URL, removeObjectsByValue } from '../../api/common';
+import _ from 'lodash';
+import { addLocalStorage, getLocalSorage } from '../../api/localStorage';
 
 const initialState = {
-  orders:  {
-    user_id: "",
-    table: "",
-    table_name: "",
+  orders: {
+    user_id: '',
+    table: '',
+    table_name: '',
     order: [],
     total: 0,
-    commande_id: ""
+    commande_id: '',
   },
   compositions: [],
-  type: "",
+  type: '',
   loading: false,
-  ...getLocalSorage()
+  ...getLocalSorage(),
 };
 
 export const OrderSlice = createSlice({
-  name: "order",
+  name: 'order',
   initialState,
   reducers: {
+    setBack: (state, _) => {
+      if (
+        state.type === 'new' &&
+        state.orders.user_id !== '' &&
+        state.orders.table !== ''
+      ) {
+        state.orders = { ...state.orders, table: '', table_name: '' };
+        addLocalStorage(state);
+      } else if (
+        state.type === 'new' &&
+        state.orders.user_id !== '' &&
+        state.orders.table === ''
+      ) {
+        state.orders = { ...state.orders, user_id: '' };
+        addLocalStorage(state);
+      } else if (
+        state.type === 'new' &&
+        state.orders.user_id === '' &&
+        state.orders.table === ''
+      ) {
+        state.type = '';
+        addLocalStorage(state);
+      } else if (state.type === 'edit') {
+        state.type = '';
+        addLocalStorage(state);
+      }
+    },
     addOrder: (state, action) => {
       if (
         state.orders.order.filter(o => o.product_id === action.payload.id)
@@ -34,32 +61,30 @@ export const OrderSlice = createSlice({
           price: action.payload.price,
           secteur_id: action.payload.secteur.id,
           quantite: 1,
-          total: action.payload.price
+          total: action.payload.price,
         });
-      
+
         state.orders.total += action.payload.price;
-         addLocalStorage(state)
+        addLocalStorage(state);
       } else {
       }
-      
-      
     },
     videPanier: (state, _) => {
-      state.orders.order = []
-      state.compositions = []
-      addLocalStorage(state)
+      state.orders.order = [];
+      state.compositions = [];
+      addLocalStorage(state);
     },
     setBarista: (state, action) => {
       state.orders = { ...state.orders, user_id: action.payload };
-       addLocalStorage(state)
+      addLocalStorage(state);
     },
     setTable: (state, action) => {
       state.orders = {
         ...state.orders,
         table: action.payload.id,
-        table_name: action.payload.nom
+        table_name: action.payload.nom,
       };
-       addLocalStorage(state)
+      addLocalStorage(state);
     },
 
     addQuantity: (state, action) => {
@@ -70,8 +95,8 @@ export const OrderSlice = createSlice({
             state.orders.order[i].price * state.orders.order[i].quantite;
         }
       });
-      state.orders.total = _.sumBy(state.orders.order, "total");
-       addLocalStorage(state)
+      state.orders.total = _.sumBy(state.orders.order, 'total');
+      addLocalStorage(state);
     },
     removeQuantity: (state, action) => {
       state.orders.order.filter((o, i) => {
@@ -87,39 +112,39 @@ export const OrderSlice = createSlice({
           }
         }
       });
-      state.orders.total = _.sumBy(state.orders.order, "total");
-       addLocalStorage(state)
+      state.orders.total = _.sumBy(state.orders.order, 'total');
+      addLocalStorage(state);
     },
     setCommande: (state, _) => {
       state.loading = true;
-      if (state.type === "new") {
+      if (state.type === 'new') {
         //state.orders.total += state.orders.cp_total;
         const cpOrder = [...state.orders.order, ...state.compositions];
-        const coObject = {...state.orders};
+        const coObject = { ...state.orders };
         coObject.order = cpOrder;
         fetch(`${API_URL}/common/commande/new`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + sessionStorage.getItem("token")
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + sessionStorage.getItem('token'),
           },
-          body: JSON.stringify(coObject)
+          body: JSON.stringify(coObject),
         }).then(r => {
           if (r.status === 200) {
-            window.location.href = "/";
+            window.location.href = '/';
           }
         });
-        window.localStorage.removeItem("commande")
+        window.localStorage.removeItem('commande');
       } else {
         state.orders.total += state.orders.cp_total;
 
         fetch(`${API_URL}/commande/edit/${state.orders.commande_id}`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: sessionStorage.getItem("token")
+            'Content-Type': 'application/json',
+            Authorization: sessionStorage.getItem('token'),
           },
-          body: JSON.stringify(state.orders)
+          body: JSON.stringify(state.orders),
         }).then(r => {
           if (r.status === 200) {
             window.location.reload();
@@ -130,23 +155,23 @@ export const OrderSlice = createSlice({
     },
     setType: (state, action) => {
       state.type = action.payload;
-       addLocalStorage(state)
+      addLocalStorage(state);
     },
     removeArticle: (state, action) => {
       /*  const getIt = state.orders.order.filter(
         (a) => a.product_id === action.payload
       ); */
-      if (action.payload.type === "composition") {
+      if (action.payload.type === 'composition') {
         state.compositions = removeObjectsByValue(
           state.compositions,
-          "tag",
+          'tag',
           action.payload.index
         );
       } else {
         state.orders.order.splice(action.payload.index, 1);
       }
-      state.orders.total = _.sumBy(state.orders.order, "total");
-       addLocalStorage(state)
+      state.orders.total = _.sumBy(state.orders.order, 'total');
+      addLocalStorage(state);
     },
     editCommande(state, action) {
       const value = action.payload;
@@ -157,16 +182,16 @@ export const OrderSlice = createSlice({
         table_name: value.tableName,
         order: value.products,
         total: value.total,
-        commande_id: value.id
+        commande_id: value.id,
       };
-       addLocalStorage(state)
+      addLocalStorage(state);
     },
     addComposition: (state, action) => {
       state.compositions = [...state.compositions, ...action.payload];
-      state.orders.total += _.sumBy(action.payload, "total");
-       addLocalStorage(state)
-    }
-  }
+      state.orders.total += _.sumBy(action.payload, 'total');
+      addLocalStorage(state);
+    },
+  },
 });
 
 export const {
@@ -180,7 +205,8 @@ export const {
   removeArticle,
   editCommande,
   addComposition,
-  videPanier
+  videPanier,
+  setBack,
 } = OrderSlice.actions;
 
 export default OrderSlice.reducer;

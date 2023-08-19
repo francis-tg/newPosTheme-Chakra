@@ -82,9 +82,13 @@ function Main() {
       `${API_URL}/common/commande/all`,
       {},
       { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-    ).then(async r => await r.json());
+    )
+      .then(async r => await r.json())
+      .catch(err => {
+        console.error('error=>' + err);
+      });
 
-    commandes && setCommandes(commandes);
+    setCommandes(commandes ?? []);
   }
   async function fetchProduitsAndCategories() {
     const { categories, produits } = await fetchAPI(
@@ -93,9 +97,9 @@ function Main() {
       {},
       { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
     ).then(async r => await r.json());
-    setCategories(categories);
-    setProducts(produits);
-    setFilterMenu(produits);
+    setCategories(categories ?? []);
+    setProducts(produits ?? []);
+    setFilterMenu(produits ?? []);
   }
   React.useEffect(() => {
     fetchProduitsAndCategories();

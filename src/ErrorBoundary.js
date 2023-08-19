@@ -1,23 +1,22 @@
 // ErrorBoundary.js
-import { Component } from 'react';
-import { Navigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-class ErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
+const ErrorBoundary = ({ children }) => {
+  const navigate = useNavigate();
+  const [hasError, setHasError] = React.useState(false);
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <Navigate to={'/500'} />;
+  React.useEffect(() => {
+    if (hasError) {
+      navigate('/500');
     }
-    return this.props.children;
-  }
-}
+  }, [hasError, navigate]);
+
+  const handleError = () => {
+    setHasError(true);
+  };
+
+  return <div onClick={handleError}>{children}</div>;
+};
 
 export default ErrorBoundary;

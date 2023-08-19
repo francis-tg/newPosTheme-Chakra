@@ -17,10 +17,14 @@ import { groupObjectsByValue } from '../api/common';
 import { setCommande } from '../redux/features/order';
 
 function Panier({ key, onClose }) {
-  const orders = useSelector(state => state.OrderReduce.orders.order);
-  const orderTotal = useSelector(state => state.OrderReduce.orders.total);
-  const Compositions = useSelector(state => state.OrderReduce.compositions);
-  const table_name = useSelector(state => state.OrderReduce.orders.table_name);
+  const orders = useSelector(state => state.OrderReduce.orders.order ?? []);
+  const orderTotal = useSelector(state => state.OrderReduce.orders.total ?? 0);
+  const Compositions = useSelector(
+    state => state.OrderReduce.compositions ?? []
+  );
+  const table_name = useSelector(
+    state => state.OrderReduce.orders.table_name ?? ''
+  );
   const groupedCompos = groupObjectsByValue(Compositions, 'tag');
   const dispatch = useDispatch();
   return (

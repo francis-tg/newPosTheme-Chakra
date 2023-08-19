@@ -8,6 +8,7 @@ import LoginPage from './pages/Login';
 import PrivateRoute from './components/PrivateRouter';
 import Error500 from './pages/Error500';
 import ErrorBoundary from './ErrorBoundary';
+import Error404 from './pages/Error404';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/500" element={<Error500 />} />
+            <Route path="/404" element={<Error404 />} />
+            <Route path="*" element={<Error404 />} />
           </Routes>
         </ErrorBoundary>
       </BrowserRouter>

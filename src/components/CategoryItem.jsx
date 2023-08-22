@@ -1,15 +1,16 @@
-import {Button} from "@chakra-ui/react";
-import React from "react";
+import { Button } from '@chakra-ui/react';
+import React from 'react';
 
-function CategoryItem({name, onClick}) {
+function CategoryItem({ name, onClick }) {
   return (
     <Button
-      minWidth={{base: "20%", md: "20%", xl: "10%", lg: "20%"}}
+      minWidth={{ base: '30%', md: '25%', xl: '20%', lg: '20%' }}
       variant="solid"
       bg="orange.500"
       color="white"
+      flexGrow={1}
       onClick={onClick}
-      _hover={{bg: "orange.700"}}
+      _hover={{ bg: 'orange.700' }}
       rounded={104}
     >
       {name}

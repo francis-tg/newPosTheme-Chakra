@@ -16,14 +16,10 @@ function Tables() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
-      .then(async r => {
-        console.log(r);
-        return await r.json();
-      })
+      .then(async r => await r.json())
       .catch(err => {
         console.log(err);
       });
-    console.log(data);
     setCommandeTable(data);
   }
   socket.on('table close', _ => {

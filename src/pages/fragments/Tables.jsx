@@ -26,7 +26,7 @@ function Tables() {
   });
   React.useEffect(() => {
     fetchTable();
-  }, []);
+  }, [CommandeTables]);
   return (
     <LargeGridContainer>
       {CommandeTables.map((cTable, i) => (

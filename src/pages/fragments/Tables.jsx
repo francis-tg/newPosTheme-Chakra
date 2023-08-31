@@ -15,7 +15,11 @@ function Tables() {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
-    }).then(async r => await r.json());
+    })
+      .then(async r => await r.json())
+      .catch(err => {
+        console.log(err);
+      });
     console.log(data);
     setCommandeTable(data);
   }

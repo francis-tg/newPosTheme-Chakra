@@ -16,6 +16,7 @@ function Tables() {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     }).then(async r => await r.json());
+    console.log(data);
     setCommandeTable(data);
   }
   socket.on('table close', _ => {
